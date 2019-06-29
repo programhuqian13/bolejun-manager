@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -123,12 +124,14 @@ public class StudentInfoController extends BaseController{
             return ResponseEntity.isError("请重新登陆！");
         }
         log.info("------学生关联课程-----，stuId：{},lessonIds:{}",stuId,lessonIds);
-        String [] ids = lessonIds.split(",");
-        for(int i = 0; i < ids.length ;i++){
-            StudentLessonInfo studentLessonInfo = new StudentLessonInfo();
-            studentLessonInfo.setStudentId(stuId);
-            studentLessonInfo.setLessonId(Long.valueOf(ids[i]));
-            studentLessonInfoService.insert(studentLessonInfo);
+        if (!StringUtils.isEmpty(lessonIds)) {
+            String [] ids = lessonIds.split(",");
+            for(int i = 0; i < ids.length ;i++){
+                StudentLessonInfo studentLessonInfo = new StudentLessonInfo();
+                studentLessonInfo.setStudentId(stuId);
+                studentLessonInfo.setLessonId(Long.valueOf(ids[i]));
+                studentLessonInfoService.insert(studentLessonInfo);
+            }
         }
         return ResponseEntity.isOk();
     }
