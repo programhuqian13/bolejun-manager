@@ -22,12 +22,28 @@
         INSERT INTO
         <include refid="table_name"/>
         (
-          <include refid="insert_field"/>
+        <include refid="insert_field"/>
         )
         VALUES (
-            #{classId},
-            #{studentId}
+        #{classId},
+        #{studentId}
         )
     </insert>
+
+    <select id="findByStudentId" resultType="com.bolejun.manager.bolejunmanager.entity.StudentClassInfo">
+        SELECT * from
+        <include refid="table_name"/>
+        where student_id = #{id}
+    </select>
+
+    <update id="update" parameterType="com.bolejun.manager.bolejunmanager.entity.StudentClassInfo">
+        UPDATE
+        <include refid="table_name"/>
+        SET
+        class_id = #{classId},
+        student_id = #{studentId}
+        where
+        id = #{id}
+    </update>
 
 </mapper>

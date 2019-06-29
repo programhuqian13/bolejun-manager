@@ -55,7 +55,7 @@ public class UserInfoController extends BaseController {
                 userInfo.setStatus("NOR");
                 this.userInfoService.insert(userInfo);
             }else{
-                userInfo.setPassword(null);
+                userInfo.setPassword(MD5Util.crypt(userInfo.getPassword()));
                 userInfo.setUpdateById(userInfo1.getId());
                 userInfo.setUpdateTime(new Date());
                 this.userInfoService.update(userInfo);
@@ -85,5 +85,14 @@ public class UserInfoController extends BaseController {
         UserInfo res = this.userInfoService.findById(userId);
         return ResponseEntity.isOk(res);
     }
+
+    @RequestMapping("deleteById")
+    @ResponseBody
+    public ResponseEntity deleteById(HttpServletRequest request,Long id){
+        log.info("------开始查询用户列表----");
+        this.userInfoService.deleteById(id);
+        return ResponseEntity.isOk();
+    }
+
 
 }

@@ -2,6 +2,7 @@ package com.bolejun.manager.bolejunmanager.services.impl;
 
 import com.bolejun.manager.bolejunmanager.base.BaseServiceImpl;
 import com.bolejun.manager.bolejunmanager.controller.vo.AddStudentModel;
+import com.bolejun.manager.bolejunmanager.controller.vo.StudentInfoVo;
 import com.bolejun.manager.bolejunmanager.dao.StudentClassInfoDao;
 import com.bolejun.manager.bolejunmanager.dao.StudentInfoDao;
 import com.bolejun.manager.bolejunmanager.dao.StudentLessonInfoDao;
@@ -48,5 +49,32 @@ public class StudentInfoServiceImpl extends BaseServiceImpl<StudentInfo, Long> i
         studentClassInfo.setClassId(addStudentModel.getClassId());
         studentClassInfo.setStudentId(studentInfo.getId());
         studentClassInfoDao.insert(studentClassInfo);
+    }
+
+    @Override
+    public StudentInfoVo findByIdClass(Long id) {
+        return studentInfoDao.findByIdClass(id);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void edit(AddStudentModel addStudentModel, UserInfo userInfo) {
+        StudentInfo studentInfo = BeanUtil.objConvert(addStudentModel,StudentInfo.class);
+        studentInfo.setUpdateById(userInfo.getId());
+        //查询学生的班级是否有修改
+        StudentClassInfo classInfo = studentClassInfoDao.findByStudentId(addStudentModel.getId());
+        if(classInfo == null){
+            StudentClassInfo studentClassInfo = new StudentClassInfo();
+            studentClassInfo.setClassId(addStudentModel.getClassId());
+            studentClassInfo.setStudentId(studentInfo.getId());
+            studentClassInfoDao.insert(studentClassInfo);
+        }else{
+            StudentClassInfo studentClassInfo = new StudentClassInfo();
+            studentClassInfo.setId(classInfo.getId());
+            studentClassInfo.setClassId(addStudentModel.getClassId());
+            studentClassInfo.setStudentId(studentInfo.getId());
+            studentClassInfoDao.update(studentClassInfo);
+        }
+        this.update(studentInfo);
     }
 }

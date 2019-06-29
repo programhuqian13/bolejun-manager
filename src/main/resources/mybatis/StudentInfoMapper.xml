@@ -141,19 +141,82 @@
     <select id="countByParam" parameterType="com.bolejun.manager.bolejunmanager.entity.StudentInfo"
             resultType="java.lang.Long">
         select count(*) from (
-            select
+        select
         a.*,class.class_name as className
-            FROM
-            <include refid="table_name"/>LEFT JOIN
-            <include
-                    refid="table_student_class"/>ON
-            a.id = c.
-            student_id
-            LEFT JOIN
-            <include refid="table_class"/>
-            ON
-            c.class_id = class.id
+        FROM
+        <include refid="table_name"/>LEFT JOIN
+        <include
+                refid="table_student_class"/>ON
+        a.id = c.
+        student_id
+        LEFT JOIN
+        <include refid="table_class"/>
+        ON
+        c.class_id = class.id
         ) r where r.student_name is not null
+    </select>
+
+    <select id="findByIdClass" resultType="com.bolejun.manager.bolejunmanager.controller.vo.StudentInfoVo">
+        select
+        a.*,class.class_name as className,class.id as classId
+        FROM
+        <include refid="table_name"/>LEFT JOIN
+        <include
+                refid="table_student_class"/>ON
+        a.id = c.
+        student_id
+        LEFT JOIN
+        <include refid="table_class"/>
+        ON
+        c.class_id = class.id
+        where
+        a.id = #{id}
+    </select>
+
+    <select id="update" parameterType="com.bolejun.manager.bolejunmanager.entity.StudentInfo">
+        UPDATE
+        <include refid="insert_table_name"/>
+        <set>
+            <if test="studentName != '' and studentName != null">
+                student_name = #{studentName},
+            </if>
+            <if test="schoolGotime != null">
+                school_gotime = #{schoolGotime} ,
+            </if>
+            <if test="trainType != '' and trainType != null">
+                train_type = #{trainType} ,
+            </if>
+            <if test="trainTime != '' and trainTime != null">
+                train_time = #{trainTime} ,
+            </if>
+            <if test="parentName != '' and parentName != null">
+                parent_name = #{parentName},
+            </if>
+            <if test="tel != '' and tel != null">
+                tel = #{tel},
+            </if>
+            <if test="phone != '' and phone != null">
+                phone = #{phone},
+            </if>
+            <if test="price != '' and price != null">
+                price = #{price} ,
+            </if>
+            <if test="priceType != '' and priceType != null">
+                price_type = #{priceType} ,
+            </if>
+            <if test="priceStatus != '' and priceStatus != null">
+                price_status = #{priceStatus},
+            </if>
+            <if test="status != '' and status != null">
+                status = #{status},
+            </if>
+            <if test="updateById != '' and updateById != null">
+                update_by_id = #{updateById},
+            </if>
+            update_time = now(),
+        </set>
+        WHERE
+        id = #{id}
     </select>
 
 </mapper>

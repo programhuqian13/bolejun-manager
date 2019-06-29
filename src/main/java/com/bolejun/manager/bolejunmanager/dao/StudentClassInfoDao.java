@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Mapper
 public interface StudentClassInfoDao extends BaseDao<StudentClassInfo, Long> {
+
+    StudentClassInfo findByStudentId(Long id);
 }

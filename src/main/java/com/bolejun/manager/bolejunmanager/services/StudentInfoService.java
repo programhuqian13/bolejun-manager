@@ -2,6 +2,7 @@ package com.bolejun.manager.bolejunmanager.services;
 
 import com.bolejun.manager.bolejunmanager.base.BaseService;
 import com.bolejun.manager.bolejunmanager.controller.vo.AddStudentModel;
+import com.bolejun.manager.bolejunmanager.controller.vo.StudentInfoVo;
 import com.bolejun.manager.bolejunmanager.entity.StudentInfo;
 import com.bolejun.manager.bolejunmanager.entity.UserInfo;
 
@@ -11,4 +12,8 @@ import com.bolejun.manager.bolejunmanager.entity.UserInfo;
 public interface StudentInfoService extends BaseService<StudentInfo, Long> {
 
     void insert(AddStudentModel addStudentModel, UserInfo userInfo);
+
+    StudentInfoVo findByIdClass(Long id);
+
+    void edit(AddStudentModel addStudentModel, UserInfo userInfo);
 }

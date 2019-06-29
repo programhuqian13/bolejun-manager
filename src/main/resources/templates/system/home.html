@@ -232,6 +232,14 @@
                     formatter: function (value, row, index) {
                         return row.updateTimeStr;
                     }
+                },
+                {
+                    field: 'oprations',
+                    title: '操作',
+                    formatter: function (value, row, index) {
+                        var oprationStr = '<button onclick="remove(' + row.id + ')"  type="button" class="btn btn-danger">删除</button>';
+                        return oprationStr;
+                    }
                 }
             ],
             onDblClickRow: function (row, $element) {
@@ -265,7 +273,6 @@
                         if (result.success) {
                             $("#exampleModalCenter").modal('hide');
                             $("#table").bootstrapTable('refresh');
-                            $("#systemSave").removeAttr("disabled");
                             form[0].reset();
                         }
                     },
@@ -286,8 +293,6 @@
                 success: function (res) {
                     if (res.success) {
                         $("#exampleModalCenter").modal('show');
-                        $("#systemSave").removeAttr("disabled");
-                        $("#form-pasword").hide();
                         $("input[name='id']").val(res.data.id);
                         $("input[name='username']").val(res.data.username);
                         $("input[name='realName']").val(res.data.realName);
@@ -295,6 +300,7 @@
                         $("input[name='age']").val(res.data.age);
                         $("input[name='brithDay']").val(res.data.brithDay);
                         $("select[name='status']").val(res.data.status);
+                        $("select[name='password']").val(res.data.password);
                     }
                 },
                 error: function () {
@@ -303,6 +309,25 @@
             });
         }
     });
+
+    function remove(id) {
+        $.ajax({
+            url: '/userInfo/deleteById',
+            dataType: "JSON",
+            data: {
+                id: id
+            },
+            success: function (res) {
+                if (res.success) {
+                    $("#table").bootstrapTable('refresh');
+                }
+            },
+            error: function () {
+                console.log("操作异常！");
+            }
+        });
+    }
+
 </script>
 </body>
 

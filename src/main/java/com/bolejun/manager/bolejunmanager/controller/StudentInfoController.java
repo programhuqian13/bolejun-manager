@@ -1,8 +1,10 @@
 package com.bolejun.manager.bolejunmanager.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.bolejun.manager.bolejunmanager.base.BaseController;
 import com.bolejun.manager.bolejunmanager.controller.vo.AddStudentModel;
 import com.bolejun.manager.bolejunmanager.controller.vo.BaseQueryIndex;
+import com.bolejun.manager.bolejunmanager.controller.vo.StudentInfoVo;
 import com.bolejun.manager.bolejunmanager.entity.*;
 import com.bolejun.manager.bolejunmanager.services.ClassInfoService;
 import com.bolejun.manager.bolejunmanager.services.LessonInfoService;
@@ -100,7 +102,11 @@ public class StudentInfoController extends BaseController{
         if(userInfo ==null){
             return ResponseEntity.isError("登录已失效！");
         }
-        this.studentInfoService.insert(addStudentModel,userInfo);
+        if(addStudentModel.getId() != null){
+            this.studentInfoService.edit(addStudentModel,userInfo);
+        }else{
+            this.studentInfoService.insert(addStudentModel,userInfo);
+        }
         return ResponseEntity.isOk();
     }
 
@@ -134,6 +140,19 @@ public class StudentInfoController extends BaseController{
             }
         }
         return ResponseEntity.isOk();
+    }
+
+    @RequestMapping("findById")
+    @ResponseBody
+    public ResponseEntity findById(HttpServletRequest request,Long id){
+        UserInfo userInfo = initRequest(request);
+        if(userInfo == null){
+            return ResponseEntity.isError("请重新登陆！");
+        }
+        log.info("------根据编号查询学生信息-----，id：{}",id);
+        StudentInfoVo studentInfoVo = studentInfoService.findByIdClass(id);
+        log.info("--------查询出来的结果，studentVo:{}", JSON.toJSONString(studentInfoVo));
+        return ResponseEntity.isOk(studentInfoVo);
     }
 
 }

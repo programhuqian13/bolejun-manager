@@ -173,10 +173,13 @@
                         <div class="form-group row" style="margin-top:10px;">
                             <label for="classId" class="col-sm-4 control-label">所在班级</label>
                             <div class="col-sm-8">
-                                <select name="classId" class="form-control" id="classId">
+                                <select required name="classId" class="form-control" id="classId">
                                     <option th:each="classInfo:${classInfos}" th:value="${classInfo.id}"
                                             th:text="${classInfo.className}"/>
                                 </select>
+                            </div>
+                            <div class="invalid-feedback">
+                                <small>请选择班级</small>
                             </div>
                         </div>
                         <div class="form-group row" style="margin-top:10px;">
@@ -451,6 +454,7 @@
             ],
             onDblClickRow: function (row, $element) {
                 var id = row.id;
+                edit(id);
             }
         });
 
@@ -598,6 +602,38 @@
             });
         });
     }
+
+    function edit(id){
+        $.ajax({
+            url: '/studentInfo/findById',
+            dataType: "JSON",
+            data: {
+                id: id
+            },
+            success: function (res) {
+                if (res.success) {
+                    $("#exampleModalCenter").modal('show');
+                    $("input[name='id']").val(res.data.id);
+                    $("input[name='studentName']").val(res.data.studentName);
+                    $("input[name='parentName']").val(res.data.parentName);
+                    $("input[name='schoolGotime']").val(res.data.schoolGotimeStr);
+                    $("input[name='trainType']").val(res.data.trainType);
+                    $("input[name='trainTime']").val(res.data.trainTime);
+                    $("input[name='tel']").val(res.data.tel);
+                    $("input[name='phone']").val(res.data.phone);
+                    $("select[name='classId']").val(res.data.classId);
+                    $("input[name='price']").val(res.data.price);
+                    $("select[name='priceType']").val(res.data.priceType);
+                    $("select[name='priceStatus']").val(res.data.priceStatus);
+                    $("select[name='status']").val(res.data.status);
+                }
+            },
+            error: function () {
+                console.log("操作异常！");
+            }
+        });
+    }
+
 </script>
 </body>
 
