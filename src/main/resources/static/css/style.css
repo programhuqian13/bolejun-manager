@@ -44,14 +44,12 @@ a:focus {
 }
 
 .wrapper {
-    display: flex;
     width: 100%;
-    align-items: stretch;
+
 }
 
 #sidebar {
-    min-width: 250px;
-    max-width: 250px;
+    width: 250px;
     background: #007bff;
     color: #fff;
     transition: all 0.3s;
@@ -64,7 +62,7 @@ a:focus {
 
 #sidebar ul.components {
     padding: 20px 0;
-    border-bottom: 1px solid #47748b;
+    /*border-bottom: 1px solid #47748b;*/
 }
 
 #sidebar ul p {
@@ -118,12 +116,15 @@ a.article:hover {
 }
 
 #content {
-    width: 100%;
+    overflow: hidden;
     padding: 20px;
-    min-height: 100vh;
+    min-height:calc(100vh - 70px);
     transition: all 0.3s;
 }
-
+.aside{
+    float: left;
+    height: calc(100vh - 70px);
+}
 @media (max-width: 768px) {
     #sidebar {
         margin-left: -250px;
