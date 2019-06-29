@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bolejun.manager.bolejunmanager.dao.StudentClassInfoDao">
+
+    <resultMap id="StudentClassInfo" type="com.bolejun.manager.bolejunmanager.entity.StudentClassInfo">
+        <id column="id" property="id" jdbcType="NUMERIC"/>
+        <result column="class_id" property="classId" jdbcType="NUMERIC"/>
+        <result column="student_id" property="studentId" jdbcType="NUMERIC"/>
+    </resultMap>
+
+    <sql id="table_name">
+        t_student_class
+    </sql>
+
+    <sql id="insert_field">
+        class_id,
+        student_id
+    </sql>
+
+    <insert id="insert" parameterType="com.bolejun.manager.bolejunmanager.entity.StudentClassInfo"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        <include refid="table_name"/>
+        (
+          <include refid="insert_field"/>
+        )
+        VALUES (
+            #{classId},
+            #{studentId}
+        )
+    </insert>
+
+</mapper>

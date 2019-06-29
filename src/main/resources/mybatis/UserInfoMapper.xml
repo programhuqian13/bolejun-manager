@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bolejun.manager.bolejunmanager.dao.UserInfoDao">
+
+    <resultMap id="UserInfo" type="com.bolejun.manager.bolejunmanager.entity.UserInfo">
+        <id column="id" property="id" jdbcType="NUMERIC"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="VARCHAR"/>
+        <result column="age" property="age" jdbcType="NUMERIC"/>
+        <result column="brith_day" property="brithDay" jdbcType="DATE"/>
+        <result column="create_time" property="createTime" jdbcType="DATE"/>
+        <result column="update_time" property="updateTime" jdbcType="DATE"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="create_by_id" property="createById" jdbcType="NUMERIC"/>
+        <result column="update_by_id" property="updateById" jdbcType="NUMERIC"/>
+    </resultMap>
+
+    <sql id="table_name">
+        t_user
+    </sql>
+
+    <sql id="insert_field">
+        username,password,real_name,sex,age,brith_day,create_time,update_time,status,create_by_id,update_by_id
+    </sql>
+
+    <sql id="whereByParam">
+        <where>
+            <if test="param != null">
+                <if test="param.username != null and param.username != ''">
+                    AND username like CONCAT('%',#{param.username},'%')
+                </if>
+                <if test="param.password != null and param.password != ''">
+                    AND password = #{param.password}
+                </if>
+                <if test="param.realName != null and param.realName != ''">
+                    AND real_name like CONCAT('%',#{param.realName},'%')
+                </if>
+                <if test="param.sex != null and param.sex != ''">
+                    AND sex = #{param.sex}
+                </if>
+                <if test="param.age != null">
+                    AND age = #{param.age}
+                </if>
+                <if test="param.brithDay != null">
+                    AND brith_day = #{param.brithDay}
+                </if>
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectByParam" parameterType="com.bolejun.manager.bolejunmanager.entity.UserInfo"
+            resultMap="UserInfo">
+        SELECT
+        *
+        FROM
+        <include refid="table_name"/>
+        <include refid="whereByParam"/>
+    </select>
+
+    <select id="countByParam" parameterType="com.bolejun.manager.bolejunmanager.entity.UserInfo"
+            resultType="java.lang.Long">
+        SELECT
+        count(*)
+        FROM
+        <include refid="table_name"/>
+        <include refid="whereByParam"/>
+    </select>
+
+    <insert id="insert" parameterType="com.bolejun.manager.bolejunmanager.entity.UserInfo"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        <include refid="table_name"/>
+        (
+        <include refid="insert_field"/>
+        )
+        VALUES (
+        #{username},
+        #{password},
+        #{realName},
+        #{sex},
+        #{age},
+        #{brithDay},
+        #{createTime},
+        #{updateTime},
+        #{status},
+        #{createById},
+        #{updateById}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.bolejun.manager.bolejunmanager.entity.UserInfo">
+        UPDATE
+        <include refid="table_name"/>
+        <set>
+                <if test="username != null and username != ''">
+                    username = #{username},
+                </if>
+                <if test="password != null and password != ''">
+                    password = #{password},
+                </if>
+                <if test="realName != null and realName != ''">
+                    real_name = #{realName},
+                </if>
+                <if test="sex != null">
+                    sex = #{sex},
+                </if>
+                <if test="age != null">
+                    age = #{age},
+                </if>
+                <if test="brithDay != null">
+                    brith_day = #{brithDay},
+                </if>
+                <if test="updateById != null">
+                    update_by_id = #{updateById},
+                </if>
+                update_time = now()
+        </set>
+        where
+        id = #{id}
+    </update>
+
+    <select id="selectByUsernameAndPassword" resultType="com.bolejun.manager.bolejunmanager.entity.UserInfo">
+        select
+        *
+        from
+        <include refid="table_name"/>
+        WHERE
+        username = #{username}
+        and
+        password = #{password}
+    </select>
+
+    <select id="findById" resultType="com.bolejun.manager.bolejunmanager.entity.UserInfo"
+            parameterType="java.lang.Long">
+        SELECT
+        *
+        FROM
+        <include refid="table_name"/>
+        WHERE id = #{id}
+    </select>
+
+</mapper>

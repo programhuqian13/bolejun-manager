@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bolejun.manager.bolejunmanager.dao.StudentInfoDao">
+
+    <resultMap id="StudentInfo" type="com.bolejun.manager.bolejunmanager.entity.StudentInfo">
+        <id column="id" property="id" jdbcType="NUMERIC"/>
+        <result column="student_name" property="studentName" jdbcType="VARCHAR"/>
+        <result column="school_gotime" property="schoolGotime" jdbcType="DATE"/>
+        <result column="train_type" property="trainType" jdbcType="VARCHAR"/>
+        <result column="train_time" property="trainTime" jdbcType="VARCHAR"/>
+        <result column="parent_name" property="parentName" jdbcType="VARCHAR"/>
+        <!--<result column="mother_name" property="motherName" jdbcType="VARCHAR"/>-->
+        <result column="tel" property="tel" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="VARCHAR"/>
+        <result column="price_type" property="priceType" jdbcType="VARCHAR"/>
+        <result column="price_status" property="priceStatus" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="DATE"/>
+        <result column="update_time" property="updateTime" jdbcType="DATE"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="create_by_id" property="createById" jdbcType="NUMERIC"/>
+        <result column="update_by_id" property="updateById" jdbcType="NUMERIC"/>
+    </resultMap>
+
+    <sql id="insert_table_name">
+        t_student
+    </sql>
+
+    <sql id="table_name">
+        t_student a
+    </sql>
+
+    <sql id="table_student_class">
+        t_student_class c
+    </sql>
+
+    <sql id="table_student_lesson">
+        t_student_lesson l
+    </sql>
+
+    <sql id="table_class">
+        t_class class
+    </sql>
+
+    <sql id="table_lesson">
+        t_lesson lesson
+    </sql>
+
+    <sql id="insert_column">
+        student_name,
+        school_gotime,
+        train_type,
+        train_time,
+        parent_name,
+        tel,
+        phone,
+        price,
+        price_type,
+        price_status,
+        create_time,
+        update_time,
+        status,
+        create_by_id,
+        update_by_id
+    </sql>
+
+    <sql id="insert_field">
+        #{studentName},
+        #{schoolGotime},
+        #{trainType},
+        #{trainTime},
+        #{parentName},
+        #{tel},
+        #{phone},
+        #{price},
+        #{priceType},
+        #{priceStatus},
+        #{createTime},
+        #{updateTime},
+        #{status},
+        #{createById},
+        #{updateById}
+    </sql>
+
+    <sql id="whereParam">
+        <where>
+            <if test="param != null">
+                <if test="param.studentName != null and param.studentName != ''">
+                    and a.student_name like CONCAT('%',#{param.studentName},'%')
+                </if>
+                <if test="param.parentName != null and param.parentName != ''">
+                    and a.parent_name like CONCAT('%',#{param.parentName},'%')
+                </if>
+                <if test="param.tel != null and param.tel != ''">
+                    and a.tel like CONCAT('%',#{param.tel},'%')
+                </if>
+                <if test="param.priceStatus != null and param.priceStatus != ''">
+                    and a.price_status = #{param.priceStatus}
+                </if>
+                <if test="param.priceType != null and param.priceType != ''">
+                    and a.price_type = #{param.priceType}
+                </if>
+                <if test="param.status != null and param.status != ''">
+                    and a.status = #{param.status}
+                </if>
+            </if>
+        </where>
+    </sql>
+
+    <insert id="insert" parameterType="com.bolejun.manager.bolejunmanager.entity.StudentInfo"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        <include refid="insert_table_name"/>
+        (
+        <include refid="insert_column"/>
+        )
+        VALUES (
+        <include refid="insert_field"/>
+        )
+    </insert>
+
+    <select id="selectByParam" parameterType="com.bolejun.manager.bolejunmanager.entity.StudentInfo"
+            resultMap="StudentInfo">
+        select * from (
+        select
+        a.*,class.class_name as className
+        FROM
+        <include refid="table_name"/>
+        LEFT JOIN
+        <include refid="table_student_class"/>
+        ON
+        a.id = c.student_id
+        LEFT JOIN
+        <include refid="table_class"/>
+        ON
+        c.class_id = class.id
+        <include refid="whereParam"/>
+        ) r where r.student_name is not null
+    </select>
+
+    <select id="countByParam" parameterType="com.bolejun.manager.bolejunmanager.entity.StudentInfo"
+            resultType="java.lang.Long">
+        select count(*) from (
+            select
+        a.*,class.class_name as className
+            FROM
+            <include refid="table_name"/>LEFT JOIN
+            <include
+                    refid="table_student_class"/>ON
+            a.id = c.
+            student_id
+            LEFT JOIN
+            <include refid="table_class"/>
+            ON
+            c.class_id = class.id
+        ) r where r.student_name is not null
+    </select>
+
+</mapper>

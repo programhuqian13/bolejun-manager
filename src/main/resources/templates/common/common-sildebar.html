@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="commonSidebar(activeFunction,user)">
+    <nav id="sidebar">
+        <ul class="list-unstyled components">
+            <li class="parent-munes"
+                th:classappend="${activeFunction == 'classmanager'} ? 'active' : (${activeFunction == 'lessonManager'} ? 'active': '')">
+                <a href="#goodsSystem" data-toggle="collapse" th:attrappend="aria-expanded=${activeFunction == 'classmanager'} ? 'true' : (${activeFunction == 'lessonManager'} ? 'true': 'false')" class="dropdown-toggle">资源管理</a>
+                <ul class="collapse list-unstyled" th:classappend="${activeFunction == 'classmanager'} ? 'show' : (${activeFunction == 'lessonManager'} ? 'show': '')" id="goodsSystem">
+                    <li class="sub-munes" th:classappend="${activeFunction == 'classmanager'} ? 'active': ''">
+                        <a th:href="@{/}">班级管理</a>
+                    </li>
+                    <li class="sub-munes" th:classappend="${activeFunction == 'lessonManager'} ? 'active': ''">
+                        <a th:href="@{/lessonInfo/index}">课程管理</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="parent-munes" th:classappend="${activeFunction == 'studentmanager'} ? 'active': ''">
+                <a href="#orderManager" data-toggle="collapse" th:attrappend="aria-expanded=${activeFunction == 'studentmanager'} ? 'true':'false'" class="dropdown-toggle">学生管理</a>
+                <ul class="collapse list-unstyled" th:classappend="${activeFunction == 'studentmanager'} ? 'show':''" id="orderManager">
+                    <li class="sub-munes" th:classappend="${activeFunction == 'studentmanager'} ? 'active': ''">
+                        <a th:href="@{/studentInfo/index}">学生管理</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="parent-munes"
+                th:classappend="${activeFunction == 'userinfomanager'} ? 'active': ''" th:if="${user.username == 'admin'}">
+                <a href="#memberManager" data-toggle="collapse" th:attrappend="aria-expanded=${activeFunction == 'userinfomanager'} ? 'true':'false'" class="dropdown-toggle">系统管理</a>
+                <ul class="collapse list-unstyled" th:classappend="${activeFunction == 'userinfomanager'} ? 'show':''" id="memberManager">
+                    <li class="sub-munes" th:classappend="${activeFunction == 'userinfomanager'} ? 'active':''">
+                        <a th:href="@{/userInfo/index}">人员信息管理</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</div>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="common/common-ref::commonRef('首页')"></div>
+<body>
+<div th:replace="common/common-header::commonHeader(${user})"></div>
+<div class="wrapper">
+    <div th:replace="common/common-sildebar::commonSidebar('classmanager',${user})"></div>
+    <!-- Page Content  -->
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding-left: 0px !important;">
+            <div class="container-fluid" style="padding-left: 0px !important;">
+                <div id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">资源管理 > 班级管理</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="row" style="margin-left: 0px !important;">
+            <div class="table-responsive">
+                <div id="toolbar">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label for="queryClassCode">班级编码：</label>
+                            <div class="input-group">
+                                <input class="form-control" name="queryClassCode" id="queryClassCode"
+                                       placeholder="班级编码"/>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-left:20px;">
+                            <label for="queryClassName">班级名称：</label>
+                            <div class="input-group">
+                                <input class="form-control" name="queryClassName" id="queryClassName"
+                                       placeholder="班级名称"/>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-left:20px;">
+                            <label for="queryStatus">状态：</label>
+                            <div class="input-group">
+                                <select name="queryStatus" class="form-control" id="queryStatus">
+                                    <option value="">全部</option>
+                                    <option value="NOR">可用</option>
+                                    <option value="DEL">不可用</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary queryButton" style="margin-left:20px;">查询</button>
+
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter"
+                                style="margin-left:20px;">新增
+                        </button>
+                    </form>
+                </div>
+                <table id="table"></table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">班级管理</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form role="form" novalidate id="classForm">
+                        <input type="hidden" name="id"/>
+                        <div class="form-group row">
+                            <label for="classCode" class="col-sm-2 control-label">班级编码</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="classCode" id="classCode" required class="form-control"
+                                       placeholder="请输入班级编码">
+                            </div>
+                            <div class="invalid-feedback">
+                                <small>请输入班级编码</small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="className" class="col-sm-2 control-label">班级名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="className" id="className" required class="form-control"
+                                       placeholder="请输入班级名称">
+                                <div class="invalid-feedback">
+                                    <small>请输入班级名称</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="status" class=" col-sm-2 control-label">班级状态</label>
+                            <div class="col-sm-10">
+                                <select required name="status" id="status" class="form-control">
+                                    <option value="NOR">可用</option>
+                                    <option value="DEL">不可用</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="submit" id="classSave" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+
+        $("#table").bootstrapTable({
+            locale: 'zh-CN',
+            pagination: true,
+//                search: true,
+            sortable: true,
+            sidePagination: "client",
+            pageNumber: 1,
+            pageSize: 10,
+//                showRefresh: true,
+            uniqueId: "id",                //每一行的唯一标识，一般为主键列
+            sortOrder: 'desc',
+            pageList: "[10, 25, 50, 100]",
+            toolbar: '#toolbar',
+            url: '/classInfo/selectAllClass?rnd=' + Math.random(),
+            method: 'GET',
+            queryParams: function (params) {
+                //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                var temp = {
+                    rows: params.limit,                         //页面大小
+                    page: (params.offset / params.limit) + 1,   //页码
+                    sort: params.sort,      //排序列名
+                    sortOrder: params.order, //排位命令（desc，asc）
+                    className: $('#queryClassName').val(),
+                    classCode: $("#queryClassCode").val(),
+                    status: $("#queryStatus").val()
+                };
+                return temp;
+            },
+            columns: [{
+                checkbox: true,
+                visible: true           //是否显示复选框
+            }, {
+                field: 'id',
+                title: '编号'
+            }, {
+                field: 'classCode',
+                title: '班级编码',
+                sortable: true
+            }, {
+                field: 'className',
+                title: '班级名称',
+                sortable: true
+            }, {
+                field: 'status',
+                title: '状态',
+                formatter: function (value, row, index) {
+                    var value = "";
+                    if (row.status == 'NOR') {
+                        value = "<span style='color:green;'>可用</span>";
+                    } else if (row.status == 'DEL') {
+                        value = "<span style='color:red;'>不可用</span>";
+                    }
+                    return value;
+                }
+            },
+                {
+                    field: 'createTime',
+                    title: '创建时间',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        return row.createTimeStr;
+                    }
+                }
+                ,
+                {
+                    field: 'updateTime',
+                    title: '修改时间',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        return row.updateTimeStr;
+                    }
+                }
+            ],
+            onDblClickRow: function (row, $element) {
+                var id = row.id;
+                edit(id);
+            }
+        });
+
+        $("#classSave").click(function (event) {
+            const f = $("#classForm");
+            if (f[0].checkValidity() === false) {
+                event.preventDefault()
+                event.stopPropagation()
+                f.addClass("was-validated");
+                return;
+            } else {
+                $.ajax({
+                    url: "/classInfo/addClassInfo",
+                    method: 'POST',
+                    data: f.serialize(),
+                    dataType: 'JSON',
+                    success: function (result) {
+                        if (result.success) {
+                            $("#exampleModalCenter").modal('hide');
+                            $("#table").bootstrapTable('refresh');
+                            f[0].reset();
+                        }
+                    },
+                    error: function () {
+                        console.log("操作异常！");
+                    }
+                });
+            }
+    });
+
+    //模糊查询
+    $(".queryButton").click(function () {
+        $("#table").bootstrapTable('refresh');
+    });
+
+    function edit(id) {
+        $.ajax({
+            url: '/classInfo/findById',
+            dataType: "JSON",
+            data: {
+                id: id
+            },
+            success: function (res) {
+                if (res.success) {
+                    $("#exampleModalCenter").modal('show');
+                    $("#classSave").removeAttr("disabled");
+                    $("input[name='id']").val(res.data.id);
+                    $("input[name='className']").val(res.data.className);
+                    $("input[name='classCode']").val(res.data.classCode);
+                    $("select[name='status']").val(res.data.status);
+                }
+            },
+            error: function () {
+                console.log("操作异常！");
+            }
+        });
+    }
+    })
+    ;
+</script>
+</body>
+
+</html>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bolejun.manager.bolejunmanager.dao.ClassInfoDao">
+
+    <resultMap id="ClassInfo" type="com.bolejun.manager.bolejunmanager.entity.ClassInfo">
+        <id column="id" property="id" jdbcType="NUMERIC"/>
+        <result column="class_name" property="className" jdbcType="VARCHAR"/>
+        <result column="class_code" property="classCode" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="create_by_id" property="createById" jdbcType="NUMERIC"/>
+        <result column="update_by_id" property="updateById" jdbcType="NUMERIC"/>
+    </resultMap>
+
+    <sql id="table_name">
+        t_class
+    </sql>
+
+    <sql id="insert_column">
+        class_name,
+        class_code,
+        create_time,
+        update_time,
+        status,
+        create_by_id,
+        update_by_id
+    </sql>
+
+    <sql id="insert_field">
+       #{className},
+        #{classCode},
+        #{createTime},
+        #{updateTime},
+        #{status},
+        #{createById},
+        #{updateById}
+    </sql>
+
+    <sql id="whereParam">
+        <where>
+            <if test="param != null">
+                <if test="param.className != null and param.className != ''">
+                    and class_name like CONCAT('%',#{param.className},'%')
+                </if>
+                <if test="param.classCode != null and param.classCode != ''">
+                    and class_code like CONCAT('%',#{param.classCode},'%')
+                </if>
+                <if test="param.status != null and param.status != ''">
+                    and status = #{param.status}
+                </if>
+            </if>
+        </where>
+    </sql>
+
+    <insert id="insert" parameterType="com.bolejun.manager.bolejunmanager.entity.ClassInfo"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        <include refid="table_name"/>
+        (
+        <include refid="insert_column"/>
+        )
+        VALUES (
+        <include refid="insert_field"/>
+        )
+    </insert>
+
+    <select id="selectByParam" parameterType="com.bolejun.manager.bolejunmanager.entity.ClassInfo"
+            resultMap="ClassInfo">
+        select
+        *
+        FROM
+        <include refid="table_name"/>
+        <include refid="whereParam"/>
+    </select>
+
+    <select id="countByParam" parameterType="com.bolejun.manager.bolejunmanager.entity.ClassInfo"
+            resultType="java.lang.Long">
+        select
+        count(*)
+        FROM
+        <include refid="table_name"/>
+        <include refid="whereParam"/>
+    </select>
+
+    <update id="update" parameterType="com.bolejun.manager.bolejunmanager.entity.ClassInfo">
+        UPDATE
+        <include refid="table_name"/>
+        <set>
+            <if test="classCode != null and classCode != ''">
+                class_code = #{classCode},
+            </if>
+            <if test="className != null and className != ''">
+                class_name = #{className},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+            update_time = now()
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <select id="findById" parameterType="java.lang.Long"
+            resultType="com.bolejun.manager.bolejunmanager.entity.ClassInfo">
+        select
+        *
+        from
+        <include refid="table_name"/>
+        where
+        id = #{id}
+    </select>
+
+</mapper>
