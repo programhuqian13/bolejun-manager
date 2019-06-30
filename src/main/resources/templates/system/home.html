@@ -252,6 +252,12 @@
             $("#table").bootstrapTable('refresh');
         });
 
+        $("#exampleModalCenter").on("hidden.bs.modal", function() {
+            var form = $("#systemForm");
+            $("input[name='id']").val("");
+            form[0].reset();
+        });
+
         $("#systemSave").click(function () {
             var password = $("#password").val();
             if(password !== null && password !== "" && password!==undefined){

@@ -224,6 +224,12 @@
             }
     });
 
+    $("#exampleModalCenter").on("hidden.bs.modal", function() {
+        var form = $("#classForm");
+        $("input[name='id']").val("");
+        form[0].reset();
+    });
+
     //模糊查询
     $(".queryButton").click(function () {
         $("#table").bootstrapTable('refresh');

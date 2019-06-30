@@ -188,6 +188,12 @@
             }
         });
 
+        $("#exampleModalCenter").on("hidden.bs.modal", function() {
+            var form = $("#lessonForm");
+            $("input[name='id']").val("");
+            form[0].reset();
+        });
+
         $("#lessonSave").click(function(){
             var form = $("#lessonForm");
             if (form[0].checkValidity() === false) {

@@ -466,6 +466,12 @@
             $("#table-lesson").bootstrapTable('refresh');
         });
 
+        $("#exampleModalCenter").on("hidden.bs.modal", function() {
+            var form = $("#studentForm");
+            $("input[name='id']").val("");
+            form[0].reset();
+        });
+
         $("#studentSave").click(function () {
             var form = $("#studentForm");
             if (form[0].checkValidity() === false) {
